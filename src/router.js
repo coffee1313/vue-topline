@@ -1,11 +1,21 @@
-import Vue from 'vue'
-import Router from 'vue-router'
+import Vue from "vue";
+import Router from "vue-router";
 
+Vue.use(Router);
 
-Vue.use(Router)
-
-export default new Router({
+var router = new Router({
   routes: [
-   
+    { path: "/login", name: "login", component: () => import("@/views/login") },
+    { path: "/home", name: "home", component: () => import("@/views/home") }
   ]
-})
+});
+router.beforeEach((to, from, next) => {
+  // 获取token
+  let token = window.sessionStorage.getItem("token");
+  if (!token && to.path !== "/login") {
+    return next("/login");
+  }
+  next();
+});
+
+export default router;
